@@ -1,441 +1,726 @@
 <!DOCTYPE html>
 <html lang="vi" class="h-full">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SSO Hub</title>
   <style>
     /* THIẾT LẬP CHỦ ĐỀ SÁNG VÀ MÀU SẮC CHỦ ĐẠO */
-    :root{
-      --bg:#f0f4f7; --card:#ffffff; --accent:#3b82f6; --muted:#64748b; --text:#1f2937;
+    :root {
+      --bg: #f0f4f7;
+      --card: #ffffff;
+      --accent: #3b82f6;
+      --muted: #64748b;
+      --text: #1f2937;
       /* ĐIỀU CHỈNH: Nền Glassmorphism cho phần Services */
-      --glass-bg: rgba(255, 255, 255, 0.7); 
-      --shadow-color: rgba(0, 0, 0, 0.15); /* Bóng đổ rõ hơn */
-      --border-color-light: rgba(255, 255, 255, 0.8); /* Viền sáng */
-      --border-color: rgba(0, 0, 0, 0.15); /* Viền tối hơn cho các phần tử bên trong */
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --shadow-color: rgba(0, 0, 0, 0.15);
+      /* Bóng đổ rõ hơn */
+      --border-color-light: rgba(255, 255, 255, 0.8);
+      /* Viền sáng */
+      --border-color: rgba(0, 0, 0, 0.15);
+      /* Viền tối hơn cho các phần tử bên trong */
     }
-    *{box-sizing:border-box}
-    html,body{
-        height:100%;margin:0;
-        font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-        color:var(--text);
-        background: none; 
+
+    * {
+      box-sizing: border-box
     }
-    a{color:inherit;text-decoration:none}
-    
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      color: var(--text);
+      background: none;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none
+    }
+
     /* TRANG TRÍ NỀN VỚI HÌNH ẢNH */
     .page-bg {
-        position: fixed;
-        inset: 0;
-        z-index: 0;
-        overflow: hidden;
-        pointer-events: none;
-        background-image: url('https://source.unsplash.com/random/1920x1080/?technology,abstract');
-        background-size: cover;
-        background-position: center;
-        filter: grayscale(0.2) brightness(0.9);
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+      background-image: url('https://source.unsplash.com/random/1920x1080/?technology,abstract');
+      background-size: cover;
+      background-position: center;
+      filter: grayscale(0.2) brightness(0.9);
     }
-    .float-shape { 
-        position: absolute;
-        filter: blur(50px);
-        opacity: 0.6;
-        transform: translate3d(0,0,0);
+
+    .float-shape {
+      position: absolute;
+      filter: blur(50px);
+      opacity: 0.6;
+      transform: translate3d(0, 0, 0);
     }
 
     /* BỐ CỤC MỚI TẬP TRUNG (Sử dụng Grid/Flex cho 2 cột) */
-    .container{
-        min-height:100vh;
-        display:flex;
-        flex-direction:column;
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
-        position: relative;
-        z-index: 10;
-        transition: filter 0.5s ease; 
+    .container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+      z-index: 10;
+      transition: filter 0.5s ease;
     }
-    .main{
-        display:grid; 
-        grid-template-columns: 1fr 400px; 
-        gap: 5px;
-        max-width:1400px; 
-        width:100%;
-        margin: 0;
-        padding: 0;
+
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 5px;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* INTRO SECTION: GIỮ TRONG SUỐT (Chỉ có Blur) */
+    .intro {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding: 20px;
+      /* background, border, box-shadow bị loại bỏ */
+      border-radius: 20px;
+      backdrop-filter: blur(15px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* === KHỐI CSS MỚI ĐỂ CĂN CHỈNH LOGO VÀ H1 === */
+    .header-content {
+      display: flex;
+      /* Bật Flexbox: Đặt logo và h1 cạnh nhau */
+      align-items: center;
+      /* Căn giữa theo chiều dọc */
+      gap: 40px;
+      /* Khoảng cách giữa Logo và H1 */
+      margin-bottom: 10px;
+      /* Khoảng cách với phần tử bên dưới */
+    }
+    /* =================================================== */
+
+
+    .logo-intro {
+      width: 100px;
+      height: 100px;
+      border-radius: 1%;
+      overflow: hidden;
+    }
+
+    /* CSS MỚI CHO HÌNH ẢNH LOGO */
+    .logo-intro img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .headline {
+      font-size: 40px;
+      margin: 10px 0 8px;
+      color: var(--text);
+      font-weight: 800;
+      line-height: 1.1;
     }
     
-    /* INTRO SECTION: GIỮ TRONG SUỐT (Chỉ có Blur) */
-    .intro{
-        display:flex;
-        flex-direction: column;
-        gap: 20px;
-        padding:20px;
-        /* background, border, box-shadow bị loại bỏ */
-        border-radius:20px; 
-        backdrop-filter: blur(15px); 
-        position: relative;
-		overflow: hidden;
+    /* === GHI ĐÈ STYLE CHO H1 KHI NẰM TRONG HEADER-CONTENT === */
+    .header-content .headline {
+        margin: 0; /* Xóa margin mặc định của h1 để căn chỉnh tốt hơn */
+        font-size: 36px; /* Hơi giảm kích thước để phù hợp hơn trên một hàng */
     }
-    .logo-intro {
-		width: 100px;
-		height: 100px;
-		border-radius: 1%;
-		/* Đã xóa background gradient và các thuộc tính text (color, font-weight, v.v.) */
-		/* display:flex... cũng được xóa vì không cần căn giữa text nữa 
-		background: #ffffff; /* Thêm nền trắng dự phòng nếu logo trong suốt 
-		box-shadow: 0 8px 20px rgba(59,130,246,0.3); */
-		overflow: hidden; /* Rất quan trọng: Cắt hình ảnh theo góc tròn */
-	}
-	/* CSS MỚI CHO HÌNH ẢNH LOGO */
-	.logo-intro img {
-		width: 100%;
-		height: 100%;
-		object-fit: contain; /* Đảm bảo ảnh lấp đầy vòng tròn mà không bị méo/giãn */
-	}
+    /* ======================================================= */
 
-    .headline{font-size:40px;margin:10px 0 8px;color:var(--text); font-weight: 800; line-height: 1.1;}
-    .lead{color:var(--muted);margin:0 0 16px; font-size: 18px;}
-    .cta .primary{background:linear-gradient(90deg,var(--accent),#2563eb);border:none;padding:12px 24px;border-radius:12px;color:white;cursor:pointer;box-shadow:0 8px 20px rgba(59,130,246,0.3)}
+    .lead {
+      color: var(--muted);
+      margin: 0 0 16px;
+      font-size: 18px;
+    }
+
+    .cta .primary {
+      background: linear-gradient(90deg, var(--accent), #2563eb);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3)
+    }
 
     /* PLACEHOLDER CHO HÌNH ẢNH TRONG SUỐT */
-    
-	.hero-image-placeholder {
-        margin-top: 10px;
-        flex-grow: 1; 
-        min-height: 50px;
-        width: 100%;
-        border-radius: 20px;
-		    overflow: hidden;
-        background-color: rgba(255, 255, 255, 0.05); 
-        /* ĐÃ THAY ĐỔI: Xóa display:flex, align-items, justify-content, color, font-style */
-		    z-index: -1;
-        position: relative; /* ĐÃ THÊM: Để chứa nội dung overlay */
+
+    .hero-image-placeholder {
+      margin-top: 10px;
+      flex-grow: 1;
+      min-height: 50px;
+      width: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      background-color: rgba(255, 255, 255, 0.05);
+      z-index: -1;
+      position: relative;
     }
-	
-	.hero-image-placeholder img {
-		width: 100%;
-		height: 100%; 
-		object-fit: conver;
-        opacity: 0.8;
-	}
+
+    .hero-image-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: conver;
+      opacity: 0.8;
+    }
 
     /* === KHỐI CSS MỚI CHO NỘI DUNG OVERLAY === */
     .hero-overlay-content {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-		height: 100%;
-        
-        padding: 20px 24px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end; /* Căn phải các phần tử (như nút) */
-        justify-content: space-between;
-        gap: 12px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+
+
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      /* Căn phải các phần tử (như nút) */
+      justify-content: space-between;
+      gap: 12px;
+
     }
-    
+
     .hero-overlay-content .lead {
-        color: #0d0343; /* Chuyển chữ thành màu đen*/
-        text-shadow: 0 1px 3px rgba(0,0,0,0.5); /* Thêm bóng cho chữ */
-        margin-bottom: 0; /* Ghi đè margin cũ */
-        text-align: left;
-        font-size: 16px; /* Hơi nhỏ lại 1 chút cho phù hợp */
+      color: #0d0343;
+      /* Chuyển chữ thành màu đen*/
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+      /* Thêm bóng cho chữ */
+      margin-bottom: 0;
+      /* Ghi đè margin cũ */
+      text-align: left;
+      font-size: 16px;
+      /* Hơi nhỏ lại 1 chút cho phù hợp */
     }
 
     .hero-overlay-content .cta {
-        /* Không cần CSS đặc biệt, nó sẽ tự căn giữa */
-		margin: 0;
+      /* Không cần CSS đặc biệt, nó sẽ tự căn giữa */
+      margin: 0;
+
+
     }
+
     /* === KẾT THÚC KHỐI CSS MỚI === */
 
 
     /* SERVICES/CARDS WRAPPER (Cột riêng cho Cards) KHÔI PHỤC NỀN, VIỀN VÀ BÓNG ĐỔ */
     .services-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-        padding: 40px 30px;
-        background: var(--glass-bg); /* Khôi phục nền */
-        border-radius: 20px;
-        box-shadow: 0 30px 80px var(--shadow-color); /* Khôi phục bóng đổ */
-        border: 1px solid var(--border-color-light); /* Khôi phục viền */
-        backdrop-filter: blur(15px);
-        margin: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: 40px 30px;
+      background: var(--glass-bg);
+      /* Khôi phục nền */
+      border-radius: 20px;
+      box-shadow: 0 30px 80px var(--shadow-color);
+      /* Khôi phục bóng đổ */
+      border: 1px solid var(--border-color-light);
+      /* Khôi phục viền */
+      backdrop-filter: blur(15px);
+      margin: 20px;
     }
+
     .services-wrapper h2 {
-        font-size: 20px;
-        font-weight: 700;
-        margin: 0;
-        color: var(--accent);
-        border-bottom: 2px solid rgba(59, 130, 246, 0.2);
-        padding-bottom: 15px;
-        text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0;
+      color: var(--accent);
+      border-bottom: 2px solid rgba(59, 130, 246, 0.2);
+      padding-bottom: 15px;
+      text-align: center;
     }
 
-    .cards-wrapper{
-        display: flex;
-        flex-direction: column; 
-        gap: 16px;
-        flex-grow: 1;
+    .cards-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      flex-grow: 1;
     }
 
-    .card{
-        width: 100%; 
-        height: auto;
-        min-height: 90px;
-        background:var(--card);
-        border-radius:14px;
-        padding:15px;
-        display:flex;
-        flex-direction:row;
-        align-items: center;
-        gap: 15px;
-        box-shadow:0 10px 25px rgba(0,0,0,0.08);
-        border: 1px solid var(--border-color); /* Tinh chỉnh lại border của card */
-        cursor:pointer;
-        transition:transform .2s ease,box-shadow .2s, border-color 0.2s;
-        text-align: left;
+    .card {
+      width: 100%;
+      height: auto;
+      min-height: 90px;
+      background: var(--card);
+      border-radius: 14px;
+      padding: 15px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--border-color);
+      /* Tinh chỉnh lại border của card */
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s, border-color 0.2s;
+      text-align: left;
     }
-    .card:hover{
-        transform:translateX(5px);
-        box-shadow:0 15px 30px rgba(0,0,0,0.1);
-        border-color: var(--accent);
+
+    .card:hover {
+      transform: translateX(5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+      border-color: var(--accent);
     }
-    .card h3{margin: 0; font-size: 16px; font-weight: 700;}
-    .card p.small { margin: 0; font-size: 13px; color: var(--muted); }
-    .platform-icon{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-weight:700; font-size: 24px; flex-shrink: 0;}
-    
+
+    .card h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .card p.small {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .platform-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
     /* Login PANEL: Giữ nguyên để dễ đọc */
-    .panel{
-        position:fixed;right:24px;top:24px;bottom:24px;width:480px; 
-        background:var(--card);
-        border-radius:20px; 
-        padding:30px; 
-        box-shadow:0 30px 80px var(--shadow-color);
-        transform:translateX(40px); 
-        opacity:0;pointer-events:none;transition:all .3s ease; 
-        z-index:100; 
-        border: 1px solid rgba(0,0,0,0.15);
-        display: flex;
-        flex-direction: column;
+    .panel {
+      position: fixed;
+      right: 24px;
+      top: 24px;
+      bottom: 24px;
+      width: 480px;
+      background: var(--card);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 30px 80px var(--shadow-color);
+      transform: translateX(40px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all .3s ease;
+      z-index: 100;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
     }
-    .panel.show{transform:none;opacity:1;pointer-events:auto}
-    .panel h2{font-size: 32px; font-weight: 800; margin-bottom: 10px; color: var(--text);} 
-    .panel .small{font-size:15px;color:var(--muted); margin-bottom: 20px;}
-    
+
+    .panel.show {
+      transform: none;
+      opacity: 1;
+      pointer-events: auto
+    }
+
+    .panel h2 {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .panel .small {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
     /* Các tùy chọn đăng nhập trong Panel */
-    .opt-list{display:flex;flex-direction:column;gap:15px;margin-top:0;}
-    .opt{
-        display:flex;gap:15px;align-items:center;padding:15px 20px;border-radius:12px;
-        border:1px solid var(--border-color);
-        cursor:pointer;
-        background: var(--bg);
-        transition: all 0.2s ease;
+    .opt-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 0;
     }
-    .opt:hover{border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.08);}
-    .opt .icon{
-        width:40px;height:40px;border-radius:10px;
-        background:var(--glass-bg); 
-        display:flex;align-items:center;justify-content:center;
-        color:var(--accent);font-weight:700; font-size: 20px;
-        box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); 
+
+    .opt {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      padding: 15px 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      background: var(--bg);
+      transition: all 0.2s ease;
     }
-    .opt .meta{flex:1;}
-    .opt .meta strong{font-size: 16px; color: var(--text);}
-    .opt .meta .small{font-size: 13px; margin-top: 2px;}
+
+    .opt:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .opt .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--glass-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 20px;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .opt .meta {
+      flex: 1;
+    }
+
+    .opt .meta strong {
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    .opt .meta .small {
+      font-size: 13px;
+      margin-top: 2px;
+    }
 
     /* Form đăng nhập */
     .form-area-wrapper {
-        border-top: 1px solid rgba(0,0,0,0.08); 
-        margin-top: 25px;
-        padding-top: 25px;
-        display: none; 
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      margin-top: 25px;
+      padding-top: 25px;
+      display: none;
     }
-    .field{margin-top:15px;display:flex;flex-direction:column;gap:10px;}
-    input[type=text], input[type=password]{
-        padding:12px 15px;border-radius:10px;border:1px solid rgba(0,0,0,0.15); 
-        background:var(--bg);color:var(--text);font-size: 16px;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    .field {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
-    input[type=text]:focus, input[type=password]:focus {
-        outline: none;
-        border-color: var(--accent);
-        box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+
+    input[type=text],
+    input[type=password] {
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
-    .submit{
-        margin-top:20px;padding:14px 20px;border-radius:12px;border:none;cursor:pointer;
-        background:linear-gradient(90deg,var(--accent),#2563eb);color:white;font-size: 17px; font-weight: 600;
-        box-shadow: 0 8px 20px rgba(59,130,246,0.3);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    input[type=text]:focus,
+    input[type=password]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
     }
-    .submit:hover{
-        transform: translateY(-2px);
-        box-shadow: 0 12px 25px rgba(59,130,246,0.4);
+
+    .submit {
+      margin-top: 20px;
+      padding: 14px 20px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(90deg, var(--accent), #2563eb);
+      color: white;
+      font-size: 17px;
+      font-weight: 600;
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+
+    .submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(59, 130, 246, 0.4);
+    }
+
     .panel-footer {
-        margin-top: auto; 
-        padding-top: 20px;
-        text-align: center;
-        border-top: 1px solid rgba(0,0,0,0.08);
-        font-size: 13px;
-        color: var(--muted);
+      margin-top: auto;
+      padding-top: 20px;
+      text-align: center;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+      font-size: 13px;
+      color: var(--muted);
     }
 
     /* FOOTER */
-    footer{
-        position: relative;
-        bottom: 0;
-        width: 100%;
-        padding:18px 24px;
-        background:rgba(255, 255, 255, 0.4);
-        text-align:center;
-        color:var(--muted);
-        z-index: 5;
+    footer {
+      position: relative;
+      bottom: 0;
+      width: 100%;
+      padding: 18px 24px;
+      background: rgba(255, 255, 255, 0.4);
+      text-align: center;
+      color: var(--muted);
+      z-index: 5;
     }
 
     /* HIỆU ỨNG MỜ CHO LANDING PAGE */
-    .container.reduced{
-        filter: blur(8px) grayscale(0.5); 
-        pointer-events: none;
-        transform: scale(0.98); 
-        opacity: 0.6;
-    }
-    /* Responsive */
-    @media (max-width:1100px){
-        .main {
-            grid-template-columns: 1fr; 
-            gap: 24px;
-            max-width: 700px;
-        }
-        .services-wrapper {
-            padding: 30px;
-        }
-        .hero-image-placeholder {
-            min-height: 100px;
-        }
+    .container.reduced {
+      filter: blur(8px) grayscale(0.5);
+      pointer-events: none;
+      transform: scale(0.98);
+      opacity: 0.6;
     }
 
-    @media (max-width:900px){
-      .panel{position:fixed;left:12px;right:12px;top:24px;bottom: 24px; width:auto}
-      .intro{padding: 32px 24px;}
-      .headline{font-size: 30px;}
+    /* === CSS MỚI CHO CHUYỂN NGÔN NGỮ === */
+    .language-toggle {
+      display: flex;
+      justify-content: flex-end;
+      /* Đẩy về bên phải */
+      margin-bottom: 5px;
+      /* Thêm khoảng cách với logo */
+      width: 100%;
     }
-    @media (max-width: 500px){
-        .services-wrapper {
-            padding: 24px;
-        }
-        .card { padding: 12px; }
-        .platform-icon{width: 40px; height: 40px; font-size: 20px;}
-        .card h3{font-size: 15px;}
-        .panel{padding: 20px;}
-        .panel h2{font-size: 28px;}
-        /* Responsive cho overlay */
-        .hero-overlay-content { padding: 16px; }
-        .hero-overlay-content .lead { font-size: 14px; }
+
+    .lang-switch {
+      display: flex;
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--card);
+    }
+
+    .lang-switch button {
+      background: none;
+      border: none;
+      padding: 8px 12px;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+      outline: none;
+    }
+
+    .lang-switch button.active {
+      background: var(--accent);
+      color: white;
+    }
+
+    /* Responsive */
+    @media (max-width:1100px) {
+      .main {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        max-width: 700px;
+      }
+
+      .services-wrapper {
+        padding: 30px;
+      }
+
+      .hero-image-placeholder {
+        min-height: 100px;
+      }
+    }
+
+    @media (max-width:900px) {
+      .panel {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        top: 24px;
+        bottom: 24px;
+        width: auto
+      }
+
+      .intro {
+        padding: 32px 24px;
+      }
+      
+      /* Cập nhật responsive cho h1 khi nằm trong header-content */
+      .header-content .headline {
+        font-size: 30px;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .services-wrapper {
+        padding: 24px;
+      }
+
+      .card {
+        padding: 12px;
+      }
+
+      .platform-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+      }
+
+      .card h3 {
+        font-size: 15px;
+      }
+
+      .panel {
+        padding: 20px;
+      }
+
+      .panel h2 {
+        font-size: 28px;
+      }
+
+      /* Responsive cho overlay */
+      .hero-overlay-content {
+        padding: 16px;
+      }
+
+      .hero-overlay-content .lead {
+        font-size: 14px;
+      }
+      
+      /* Cho phép logo và h1 xuống dòng nếu màn hình quá hẹp */
+      .header-content { 
+          flex-wrap: wrap; 
+          gap: 10px; 
+      }
+      .header-content .headline {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
-<body class="h-full">
-    <div class="page-bg" aria-hidden="true">
-        <svg class="float-shape" style="left:-5%; top:-10%; width:720px; height:520px;" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <linearGradient id="g1" x1="0%" x2="100%" y1="0%" y2="100%">
-                    <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.9" />
-                    <stop offset="100%" stop-color="#6366f1" stop-opacity="0.8" />
-                </linearGradient>
-            </defs>
-            <rect width="600" height="600" rx="120" fill="url(#g1)" />
-        </svg>
 
-        <svg class="float-shape" style="right:5%; bottom:5%; width:520px; height:420px; opacity: 0.4;" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <linearGradient id="g2" x1="0%" x2="100%" y1="0%" y2="100%">
-                    <stop offset="0%" stop-color="#10b981" stop-opacity="0.9" />
-                    <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.7" />
-                </linearGradient>
-            </defs>
-            <circle cx="300" cy="300" r="300" fill="url(#g2)" />
-        </svg>
-    </div>
+<body class="h-full">
+  <div class="page-bg" aria-hidden="true">
+    <svg class="float-shape" style="left:-5%; top:-10%; width:720px; height:520px;" viewBox="0 0 600 600"
+      xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g1" x1="0%" x2="100%" y1="0%" y2="100%">
+          <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.9" />
+          <stop offset="100%" stop-color="#6366f1" stop-opacity="0.8" />
+        </linearGradient>
+      </defs>
+      <rect width="600" height="600" rx="120" fill="url(#g1)" />
+    </svg>
+
+    <svg class="float-shape" style="right:5%; bottom:5%; width:520px; height:420px; opacity: 0.4;" viewBox="0 0 600 600"
+      xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g2" x1="0%" x2="100%" y1="0%" y2="100%">
+          <stop offset="0%" stop-color="#10b981" stop-opacity="0.9" />
+          <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.7" />
+        </linearGradient>
+      </defs>
+      <circle cx="300" cy="300" r="300" fill="url(#g2)" />
+    </svg>
+  </div>
 
   <div class="container" id="page">
     <main class="main">
       <section class="intro">
-        <div class="logo-intro">
-			<img src="./images/LogoLSTS.png" alt="Logo Trường" style="border-radius:16%">
-		</div>
-        <h1 class="headline"><span style="color:var(--accent);">Cổng truy cập (LSTS portal)</span></h1>
+        <div class="language-toggle">
+          <div class="lang-switch">
+            <button id="lang-vi" class="active" onclick="translateTo('vi')">VI</button>
+            <button id="lang-en" onclick="translateTo('en')">EN</button>
+          </div>
+        </div>
         
-        <div class="hero-image-placeholder">
-            <img src="./images/HS.png">
-            
-            <div class="hero-overlay-content">
-                <p class="lead">Hệ thống Đăng nhập một lần (SSO) giúp bạn truy cập mọi nền tảng một cách an toàn và tiện lợi bằng tài khoản trường.</p>
-                <div class="cta">
-                    <button class="primary" onclick="alert('Xem Hướng dẫn')">Xem Hướng Dẫn</button>
-                </div>
+        <div class="header-content">
+            <div class="logo-intro">
+                <img src="./images/LogoLSTS.png" alt="Logo Trường" style="border-radius:1%">
             </div>
+
+            <h1 class="headline" data-vi="Cổng đăng nhập LSTS" data-en="LSTS Sign In Portal"><span
+                style="color:var(--accent);">Cổng đăng nhập LSTS</span></h1>
+        </div>
+        <div class="hero-image-placeholder">
+          <img src="./images/HS.png">
+
+          <div class="hero-overlay-content">
+            <p class="lead" data-vi="Hệ thống Đăng nhập giúp truy cập các nền tảng thông tin và học tập của nhà trường."
+              data-en="The Sign-In Portal allows users to access the school’s information and learning resources.">Hệ
+              thống Đăng nhập giúp truy cập các nền tảng thông tin và học tập của nhà trường.</p>
+            <div class="cta">
+              <button class="primary" onclick="alert('Xem Hướng dẫn')" data-vi="Xem Hướng Dẫn" data-en="View Guide">Xem
+                Hướng Dẫn</button>
+            </div>
+          </div>
         </div>
 
-        </section>
+      </section>
 
       <section class="services-wrapper">
-        <h2>Chọn nền tảng</h2>
+        <h2 data-vi="Chọn nền tảng" data-en="Select Platform">Chọn nền tảng</h2>
         <div class="cards-wrapper">
-            <div class="card" data-platform="canvas" tabindex="0">
-                <div class="platform-icon" style="background:linear-gradient(135deg,#e53e3e,#f6ad55)">L</div>
-                <div>
-                    <h3>Canvas LMS</h3>
-                    <p class="small">Hệ thống quản lý học tập và tài liệu khóa học</p>
-                </div>
+          <div class="card" data-platform="canvas" tabindex="0">
+            <div class="platform-icon" style="background:linear-gradient(135deg,#e53e3e,#f6ad55)">L</div>
+            <div class="card-content">
+              <h3 data-vi="Canvas LMS" data-en="Canvas LMS">Canvas LMS</h3>
+              <p class="small" data-vi="Hệ thống quản lý học tập và tài liệu khóa học"
+                data-en="Learning Management System and course materials">Hệ thống quản lý học tập và tài liệu khóa học
+              </p>
             </div>
+          </div>
 
-            <div class="card" data-platform="email" tabindex="0">
-                <div class="platform-icon" style="background:linear-gradient(135deg,#2563eb,#38bdf8)">M</div>
-                <div>
-                    <h3>Email</h3>
-                    <p class="small">Hộp thư điện tử chính thức của trường</p>
-                </div>
+          <div class="card" data-platform="email" tabindex="0">
+            <div class="platform-icon" style="background:linear-gradient(135deg,#2563eb,#38bdf8)">E</div>
+            <div class="card-content">
+              <h3 data-vi="Email" data-en="Email">Email</h3>
+              <p class="small" data-vi="Hộp thư điện tử chính thức của trường" data-en="Official school email inbox">Hộp
+                thư điện tử chính thức của trường</p>
             </div>
+          </div>
 
-            <div class="card" data-platform="crm" tabindex="0">
-                <div class="platform-icon" style="background:linear-gradient(135deg,#10b981,#34d399)">C</div>
-                <div>
-                    <h3>CRM</h3>
-                    <p class="small">Hệ thống thông tin chung</p>
-                </div>
+          <div class="card" data-platform="crm" tabindex="0">
+            <div class="platform-icon" style="background:linear-gradient(135deg,#10b981,#34d399)">C</div>
+            <div class="card-content">
+              <h3 data-vi="CRM" data-en="CRM">CRM</h3>
+              <p class="small" data-vi="Hệ thống thông tin chung" data-en="General Information System">Hệ thống thông
+                tin chung</p>
             </div>
+          </div>
 
-			</div>
+        </div>
       </section>
-      
+
     </main>
   </div>
 
   <div class="panel" id="panel">
     <div id="panelInner">
-      <h2 id="panelTitle">Đăng nhập</h2>
-      <p class="small" id="panelDesc">Chọn phương thức đăng nhập</p>
+      <h2 id="panelTitle" data-vi-default="Đăng nhập" data-en-default="Login">Đăng nhập</h2>
+      <p class="small" id="panelDesc" data-vi-default="Chọn phương thức đăng nhập"
+        data-en-default="Select login method">Chọn phương thức đăng nhập</p>
       <div class="opt-list" id="options">
-        </div>
+      </div>
       <div id="formArea" class="form-area-wrapper">
         <div class="field">
-          <label class="small">Tên đăng nhập</label>
+          <label class="small" data-vi="Tên đăng nhập" data-en="Username">Tên đăng nhập</label>
           <input type="text" id="username" placeholder="user@domain.edu" />
         </div>
         <div class="field">
-          <label class="small">Mật khẩu</label>
+          <label class="small" data-vi="Mật khẩu" data-en="Password">Mật khẩu</label>
           <input type="password" id="password" placeholder="••••••••" />
         </div>
-        <button class="submit" id="submitBtn">Đăng nhập</button>
-        <p class="panel-footer">Quên mật khẩu? <a href="#" style="color: var(--accent);">Liên hệ hỗ trợ</a></p>
+        <button class="submit" id="submitBtn" data-vi="Đăng nhập" data-en="Log In">Đăng nhập</button>
+        <p class="panel-footer"
+          data-vi="Quên mật khẩu? &lt;a href='#' style='color: var(--accent);'&gt;Liên hệ hỗ trợ&lt;/a&gt;"
+          data-en="Forgot password? &lt;a href='#' style='color: var(--accent);'&gt;Contact Support&lt;/a&gt;">Quên mật
+          khẩu? <a href="#" style="color: var(--accent);">Liên hệ hỗ trợ</a></p>
       </div>
     </div>
   </div>
 
   <footer>
-      <div style="max-width:1080px;margin:0 auto;padding:12px;">© 2025 Trường THCS và THPT Đinh Thiện Lý / Lawrence S. Ting School.</div>
+    <div style="max-width:1080px;margin:0 auto;padding:12px;" data-vi="© 2025 Trường THCS và THPT Đinh Thiện Lý."
+      data-en="© 2025 Lawrence S. Ting School.">© 2025 Trường THCS và THPT Đinh Thiện Lý.</div>
   </footer>
 
   <script>
@@ -444,119 +729,187 @@
     const options = document.getElementById('options');
     const panelTitle = document.getElementById('panelTitle');
     const panelDesc = document.getElementById('panelDesc');
-    const formArea = document.getElementById('formArea'); 
+    const formArea = document.getElementById('formArea');
+    let currentLang = 'vi'; // Thêm biến theo dõi ngôn ngữ hiện tại
 
     // Khai báo dữ liệu nền tảng
     const platforms = {
       canvas: {
-        name:'Canvas LMS',
-        desc: 'Đăng nhập vào Canvas bằng tài khoản trường',
+        name: { vi: 'Canvas LMS', en: 'Canvas LMS' },
+        desc: { vi: 'Đăng nhập vào Canvas bằng tài khoản trường', en: 'Log in to Canvas with your school account' },
         options: [
-          // ĐÃ THÊM THUỘC TÍNH 'url'
-          {id:'ms', title:'Đăng nhập với Microsoft', subtitle:'Sử dụng tài khoản Office 365 của trường', type:'sso', provider:'microsoft', url:'https://lsts.instructure.com/login/saml'},
-          {id:'google', title:'Đăng nhập với Google', subtitle:'Sử dụng Google Workspace của trường', type:'sso', provider:'google', url:'https://lsts.instructure.com/login/google'}
+          // Thêm thuộc tính dịch cho title và subtitle
+          { id: 'ms', title: { vi: 'Đăng nhập với Microsoft', en: 'Log in with Microsoft' }, subtitle: { vi: 'Sử dụng tài khoản Office 365 của trường', en: 'Use your school Office 365 account' }, type: 'sso', provider: 'microsoft', url: 'https://lsts.instructure.com/login/saml' },
+          { id: 'google', title: { vi: 'Đăng nhập với Google', en: 'Log in with Google' }, subtitle: { vi: 'Sử dụng Google Workspace của trường', en: 'Use your school Google Workspace account' }, type: 'sso', provider: 'google', url: 'https://lsts.instructure.com/login/google' }
         ]
       },
       email: {
-        name: 'Email',
-        desc: 'Đăng nhập hộp thư trường',
+        name: { vi: 'Email', en: 'Email' },
+        desc: { vi: 'Đăng nhập hộp thư trường', en: 'Log in to your school inbox' },
         options: [
-          // ĐÃ THÊM THUỘC TÍNH 'url'
-          {id:'ms', title:'Đăng nhập với Microsoft', subtitle:'Office 365 / Exchange', type:'sso', provider:'microsoft', url:'https://outlook.office365.com/mail'}
+          // Thêm thuộc tính dịch cho title và subtitle
+          { id: 'ms', title: { vi: 'Đăng nhập với Microsoft', en: 'Log in with Microsoft' }, subtitle: { vi: 'Office 365 / Exchange', en: 'Office 365 / Exchange' }, type: 'sso', provider: 'microsoft', url: 'https://outlook.office365.com/mail' }
         ]
       },
       crm: {
-        name: 'CRM',
-        desc: 'Hệ thống CRM - đăng nhập bằng tên người dùng',
+        name: { vi: 'CRM', en: 'CRM' },
+        desc: { vi: 'Hệ thống CRM - đăng nhập bằng tên người dùng', en: 'CRM System - log in with username' },
         options: [
-          //{id:'local', title:'Đăng nhập bằng tài khoản', subtitle:'Tài khoản CRM (user + mật khẩu)', type:'form', url:'#'} // URL '#' chỉ là placeholder cho form login
-          {id:'local', title:'Đăng nhập bằng tài khoản', subtitle:'Tài khoản CRM', type:'sso', url:'https://crm3.lsts.edu.vn/crm/'}
+          // Thêm thuộc tính dịch cho title và subtitle
+          { id: 'local', title: { vi: 'Đăng nhập bằng tài khoản', en: 'Log in with account' }, subtitle: { vi: 'Tài khoản CRM', en: 'CRM Account' }, type: 'sso', url: 'https://crm3.lsts.edu.vn/crm/' }
         ]
       }
     };
 
     // Gắn sự kiện click cho các Card
-    document.querySelectorAll('.card').forEach(card=>{
-      card.addEventListener('click', ()=> showPanel(card.dataset.platform));
-      card.addEventListener('keydown', (e)=>{ if(e.key==='Enter') showPanel(card.dataset.platform); });
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('click', () => showPanel(card.dataset.platform));
+      card.addEventListener('keydown', (e) => { if (e.key === 'Enter') showPanel(card.dataset.platform); });
     });
 
-    panel.addEventListener('mouseleave', ()=> closePanel());
+    panel.addEventListener('mouseleave', () => closePanel());
 
-    function showPanel(platformKey){
+    function showPanel(platformKey) {
       const p = platforms[platformKey];
-      if(!p) return;
-      panelTitle.textContent = p.name;
-      panelDesc.textContent = p.desc;
+      if (!p) return;
+      // Dịch tiêu đề và mô tả panel
+      panelTitle.textContent = p.name[currentLang] || p.name['vi'];
+      panelDesc.textContent = p.desc[currentLang] || p.desc['vi'];
       options.innerHTML = '';
-      formArea.style.display='none'; 
+      formArea.style.display = 'none';
 
-      p.options.forEach(op=>{
+      p.options.forEach(op => {
         const d = document.createElement('div');
-        d.className='opt';
+        d.className = 'opt';
         d.tabIndex = 0;
-        // Thêm mô tả của card vào innerHTML
-        d.innerHTML = `<div class=\"icon\">${iconFor(op.provider||op.id)}</div><div class=\"meta\"><strong>${op.title}</strong><div class=\"small\">${op.subtitle}</div></div>`;
-        d.addEventListener('click', ()=>selectOption(op));
-        d.addEventListener('keydown', (e)=>{ if(e.key==='Enter') selectOption(op); });
+        // Dịch nội dung các tùy chọn đăng nhập
+        const title = op.title[currentLang] || op.title['vi'];
+        const subtitle = op.subtitle[currentLang] || op.subtitle['vi'];
+        d.innerHTML = `<div class=\"icon\">${iconFor(op.provider || op.id)}</div><div class=\"meta\"><strong>${title}</strong><div class=\"small\">${subtitle}</div></div>`;
+        d.addEventListener('click', () => selectOption(op));
+        d.addEventListener('keydown', (e) => { if (e.key === 'Enter') selectOption(op); });
         options.appendChild(d);
       });
 
       // show panel và áp dụng hiệu ứng mờ
       panel.classList.add('show');
-      page.classList.add('reduced'); 
+      page.classList.add('reduced');
       document.body.classList.add('panel-open');
-      
+
       panel.dataset.current = platformKey;
     }
 
     // === HÀM SELECT OPTION ĐÃ CẬP NHẬT ===
-    function selectOption(op){
-      if(op.type === 'sso'){
+    function selectOption(op) {
+      if (op.type === 'sso') {
         // CHUYỂN HƯỚNG ĐẾN URL ĐÃ KHAI BÁO
-        if(op.url) {
-            window.location.href = op.url;
+        if (op.url) {
+          window.location.href = op.url;
         } else {
-            alert('Không tìm thấy đường dẫn chuyển hướng.');
+          alert(currentLang === 'en' ? 'Redirection path not found.' : 'Không tìm thấy đường dẫn chuyển hướng.');
         }
-      } else if(op.type === 'form'){
+      } else if (op.type === 'form') {
         // Đối với form login, chỉ hiển thị form
-        formArea.style.display='block'; 
+        formArea.style.display = 'block';
       }
     }
     // ======================================
 
-    function iconFor(id){
-      if(id==='microsoft' || id==='ms') return 'M';
-      if(id==='google') return 'G';
-      return '•'; 
+    function iconFor(id) {
+      if (id === 'microsoft' || id === 'ms') return 'M';
+      if (id === 'google') return 'G';
+      return '•';
     }
 
     // Xử lý đóng panel
-    document.addEventListener('click', (e)=>{
-      if(!panel.contains(e.target) && !e.target.closest('.card')){
+    document.addEventListener('click', (e) => {
+      if (!panel.contains(e.target) && !e.target.closest('.card') && !e.target.closest('.lang-switch')) {
         closePanel();
       }
     });
 
-    function closePanel(){
+    function closePanel() {
       panel.classList.remove('show');
-      page.classList.remove('reduced'); 
+      page.classList.remove('reduced');
       document.body.classList.remove('panel-open');
-      setTimeout(()=>{ options.innerHTML=''; formArea.style.display='none'; }, 300);
+      setTimeout(() => { options.innerHTML = ''; formArea.style.display = 'none'; }, 300);
     }
 
     // submit handler (demo)
-    document.getElementById('submitBtn').addEventListener('click', ()=>{
-      const u=document.getElementById('username').value;
-      const p=document.getElementById('password').value;
-      if(!u||!p){alert('Vui lòng nhập tên đăng nhập và mật khẩu');return}
-      alert('Đã gửi dữ liệu đăng nhập (demo): ' + u);
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      const u = document.getElementById('username').value;
+      const p = document.getElementById('password').value;
+      if (!u || !p) {
+        alert(currentLang === 'en' ? 'Please enter username and password' : 'Vui lòng nhập tên đăng nhập và mật khẩu');
+        return
+      }
+      alert((currentLang === 'en' ? 'Submitted login data (demo): ' : 'Đã gửi dữ liệu đăng nhập (demo): ') + u);
     });
 
     // Accessibility: close panel with Escape
-    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closePanel(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePanel(); });
 
+    // ==========================================================
+    // === CHỨC NĂNG CHUYỂN ĐỔI NGÔN NGỮ MỚI ===
+    // ==========================================================
+    function translateTo(lang) {
+      if (currentLang === lang) return;
+      currentLang = lang;
+
+      // 1. Cập nhật trạng thái nút
+      document.getElementById('lang-vi').classList.remove('active');
+      document.getElementById('lang-en').classList.remove('active');
+      document.getElementById(`lang-${lang}`).classList.add('active');
+      document.documentElement.lang = lang; // Cập nhật thuộc tính lang của HTML
+
+      // 2. Dịch các thành phần tĩnh
+      const elementsToTranslate = document.querySelectorAll('[data-vi], [data-en]');
+      elementsToTranslate.forEach(el => {
+        const translationKey = `data-${lang}`;
+        const translation = el.getAttribute(translationKey);
+        if (translation) {
+          // Kiểm tra xem có phải là thẻ footer đặc biệt không (dùng innerHTML)
+          if (el.classList.contains('panel-footer') || el.tagName.toLowerCase() === 'div' && el.parentElement.tagName.toLowerCase() === 'footer') {
+            el.innerHTML = translation;
+          } else if (el.tagName.toLowerCase() === 'h1') {
+            // Xử lý cho H1 để giữ lại thẻ span màu sắc
+            el.innerHTML = `<span style="color:var(--accent);">${translation.split('(')[0].trim()}</span>`
+          }
+          else {
+            el.textContent = translation;
+          }
+        }
+      });
+
+      // 3. Dịch các thành phần động (Card, Panel)
+      // Nếu panel đang mở, phải dịch lại nội dung panel
+      if (panel.classList.contains('show') && panel.dataset.current) {
+        showPanel(panel.dataset.current);
+      } else {
+        // Nếu panel đóng, vẫn cần dịch tiêu đề mặc định của panel (dùng data-default)
+        panelTitle.textContent = panelTitle.getAttribute(`data-${lang}-default`);
+        panelDesc.textContent = panelDesc.getAttribute(`data-${lang}-default`);
+      }
+
+      // 4. Dịch nội dung động trong Cards (Nếu có)
+      document.querySelectorAll('.card').forEach(card => {
+        const h3 = card.querySelector('h3');
+        const p = card.querySelector('p.small');
+        if (h3 && h3.hasAttribute(`data-${lang}`)) {
+          h3.textContent = h3.getAttribute(`data-${lang}`);
+        }
+        if (p && p.hasAttribute(`data-${lang}`)) {
+          p.textContent = p.getAttribute(`data-${lang}`);
+        }
+      });
+
+    }
+    // Gọi hàm dịch khi tải trang lần đầu để đảm bảo ngôn ngữ mặc định là VI
+    document.addEventListener('DOMContentLoaded', () => {
+      translateTo('vi');
+    });
+    // ==========================================================
   </script>
 </body>
+
 </html>
